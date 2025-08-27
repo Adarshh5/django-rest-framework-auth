@@ -50,16 +50,4 @@ jobs:
 
           env_vars: |
             SECRET_KEY=${{ secrets.SECRET_KEY }}
-            email_host=smtp-relay.brevo.com
-            email_host_user=${{ secrets.email_host_user }}
-            email_host_password=${{ secrets.email_host_password }}
-            default_from_email=${{ secrets.default_from_email }}
-            dbname=${{ secrets.dbname }}
-            user=${{ secrets.user }}
-            host=${{ secrets.host }}
-            MAIL_PORT=${{ secrets.MAIL_PORT }}
-            port=${{ secrets.port }}
-            MAIL_FROM_NAME=${{ secrets.MAIL_FROM_NAME }}
-            password=${{ secrets.password }}
-            SITE_DOMAIN=${{ secrets.SITE_DOMAIN }}
             INSTANCE_CONNECTION_NAME=${{ secrets.INSTANCE_CONNECTION_NAME }}
