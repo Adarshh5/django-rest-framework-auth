@@ -19,8 +19,6 @@ RUN pip install --no-cache-dir -r requirements.txt gunicorn psycopg2-binary whit
 # Copy project files
 COPY . .
 
-# Collect static files
-RUN python manage.py collectstatic --noinput
 
 # Run Gunicorn with 4 workers
 CMD exec gunicorn SimpleInvoice.wsgi:application \
