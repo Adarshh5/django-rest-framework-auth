@@ -1,0 +1,67 @@
+{% extends 'billing/base.html' %}
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'billing/css/profile.css' %}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+{% endblock %}
+
+{% block main-content %}
+<div class="profile-container">
+    <div class="container">
+        <div class="profile-card">
+            <div class="text-center mb-5">
+                <h2 class="mb-3" style="color: #1d2228;">Account Settings</h2>
+                <p class="text-muted">Manage your password settings</p>
+            </div>
+
+            {% if messages %}
+            <div class="alert alert-dismissible fade show">
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <div class="row g-4">
+                <!-- Change Password -->
+                <div class="col-md-6">
+                    <a href="{% url 'ChangePassword' %}" class="profile-option">
+                        <div class="text-center">
+                            <div class="option-icon">
+                                <i class="bi bi-shield-lock"></i>
+                            </div>
+                            <h4 class="option-title">Change Password</h4>
+                            <p class="option-description">
+                                Update your current password
+                            </p>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Reset Password -->
+                <div class="col-md-6">
+                    <a href="{% url 'password_reset' %}" class="profile-option">
+                        <div class="text-center">
+                            <div class="option-icon">
+                                <i class="bi bi-arrow-clockwise"></i>
+                            </div>
+                            <h4 class="option-title">Reset Password</h4>
+                            <p class="option-description">
+                                Get password reset instructions
+                            </p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="text-center mt-5">
+                <a href="{% url 'home' %}" class="btn btn-accent">
+                    <i class="bi bi-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock main-content %}

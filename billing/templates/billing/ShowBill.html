@@ -1,0 +1,102 @@
+{% extends 'billing/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'billing/css/ShowBill.css' %}">
+{% endblock %}
+
+{% block main-content %}
+<div class="container py-5">
+    <!-- Filter Section -->
+    <div class="filter-section">
+        <h3 class="mb-4" style="color: var(--dark-color);">Filter Bills</h3>
+        <form method="get" class="filter-form">
+            <div class="row g-3">
+                {% for fm in FilterForm %}
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="form-label" style="color: var(--dark-color);">{{fm.label}}</label>
+                        {{fm}}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="text-end mt-3">
+                <button type='submit' class="btn btn-accent">Apply Filter</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Bills Table -->
+    <div class="table-container">
+        {% if Bills %}
+        <table class="items-table">
+            <thead>
+                <tr>
+                    <th>Customer Name</th>
+                    <th>Contact</th>
+                    <th>Description</th>
+                    <th>Total Amount</th>
+                    <th>Date</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for bill in Bills %}
+                <tr>
+                    <td>{{ bill.customer_name }}</td>
+                    <td>{{ bill.customer_number }}</td>
+                    <td>
+                        {% if bill.description %}
+                            {{ bill.description|truncatechars:30 }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    <td>₹{{ bill.total_amount }}</td>
+                    <td>{{ bill.created_at|date:"d M Y" }}</td>
+                    <td>
+                        <a href="{% url 'GetBill' %}?billid={{ bill.id }}" class="bill-link">
+                            View Bill
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="no-bills">
+            <h4>No bills found</h4>
+            <p class="text-muted">Try adjusting your filters</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Pagination -->
+    {% if is_paginated %}
+    <div class="mt-4">
+        <nav aria-label="Bill navigation">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                </li>
+                {% endif %}
+                
+                {% for num in page_obj.paginator.page_range %}
+                <li class="page-item {% if num == page_obj.number %}active{% endif %}">
+                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                </li>
+                {% endfor %}
+                
+                {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+    {% endif %}
+</div>
+{% endblock main-content %}

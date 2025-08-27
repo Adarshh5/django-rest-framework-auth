@@ -1,0 +1,65 @@
+name: CI/CD — Deploy Django to Cloud Run
+
+on:
+  push:
+    branches: [ "master" ]
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Authenticate to GCP
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Setup gcloud CLI
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          project_id: ${{ secrets.GCP_PROJECT }}
+
+      # Docker login to Artifact Registry
+      - name: Docker login to Artifact Registry
+        run: |
+          gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin https://asia-south1-docker.pkg.dev
+
+      - name: Build and push container image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          tags: asia-south1-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/django-repo/django-app:${{ github.sha }}
+
+      - name: Deploy to Cloud Run
+        id: deploy
+        uses: google-github-actions/deploy-cloudrun@v2
+        with:
+          service: django-rest
+          image: asia-south1-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/django-repo/django-app:${{ github.sha }}
+          region: ${{ secrets.GCP_REGION }}
+          project_id: ${{ secrets.GCP_PROJECT }}
+          flags: '--memory=512Mi --cpu=1 --allow-unauthenticated'
+
+          env_vars: |
+            SECRET_KEY=${{ secrets.SECRET_KEY }}
+            email_host=smtp-relay.brevo.com
+            email_host_user=${{ secrets.email_host_user }}
+            email_host_password=${{ secrets.email_host_password }}
+            default_from_email=${{ secrets.default_from_email }}
+            dbname=${{ secrets.dbname }}
+            user=${{ secrets.user }}
+            host=${{ secrets.host }}
+            MAIL_PORT=${{ secrets.MAIL_PORT }}
+            port=${{ secrets.port }}
+            MAIL_FROM_NAME=${{ secrets.MAIL_FROM_NAME }}
+            password=${{ secrets.password }}
+            SITE_DOMAIN=${{ secrets.SITE_DOMAIN }}
+            INSTANCE_CONNECTION_NAME=${{ secrets.INSTANCE_CONNECTION_NAME }}

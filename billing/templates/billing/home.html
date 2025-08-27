@@ -1,0 +1,66 @@
+{% extends 'billing/base.html' %}
+{% load static %}
+{% block main-content %}
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'billing/css/home.css' %}" >
+{% endblock %}
+
+<main class="bg-main">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h1 class="display-4 fw-bold mb-3" style="color: var(--dark-color);">Streamline Your Billing Process</h1>
+            <div class="decorative-line"></div>
+            <p class="lead text-secondary mb-4 px-lg-5">Transform your billing management with our intuitive platform designed for efficiency and clarity</p>
+        </div>
+
+        <div class="row g-4">
+            <!-- Create a Bill -->
+            <div class="col-lg-4">
+                <div class="card card-hover shadow-sm border-0">
+                    <div class="card-body py-5 px-4">
+                        <div class="feature-icon">
+                            <img src="" alt="Create Bill">
+                        </div>
+                        <h3 class="h4 mb-3" style="color: var(--dark-color);">Create Bills</h3>
+                        <p class="text-muted mb-4">Quickly generate professional invoices with automated calculations</p>
+                        <a href="{% url 'CreateBill' %}" class="btn btn-accent">Get Started</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- View Bills -->
+            <div class="col-lg-4">
+                <div class="card card-hover shadow-sm border-0">
+                    <div class="card-body py-5 px-4">
+                        <div class="feature-icon">
+                            <img src="{% static 'billing/images/trackhistory.jpg' %}" alt="View Bills">
+                        </div>
+                        <h3 class="h4 mb-3" style="color: var(--dark-color);">Track History</h3>
+                        <p class="text-muted mb-4">Monitor payment statuses and access complete billing records</p>
+                        <a href="{% url 'ShowBill' %}" class="btn btn-accent">View Records</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Manage Shops -->
+            <div class="col-lg-4">
+                <div class="card card-hover shadow-sm border-0">
+                    <div class="card-body py-5 px-4">
+                        <div class="feature-icon">
+                            <img src="" alt="Manage Shops">
+                        </div>
+                        <h3 class="h4 mb-3" style="color: var(--dark-color);">Manage Outlets</h3>
+                        <p class="text-muted mb-4">Centralized control for multiple business locations</p>
+                        <a href="{% url 'RegisterShop' %}" class="btn btn-accent">Configure</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-5">
+            <p class="text-muted mb-0">Trusted by 500+ businesses worldwide</p>
+        </div>
+    </div>
+</main>
+{% endblock main-content %}

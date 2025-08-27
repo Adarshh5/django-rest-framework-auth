@@ -1,0 +1,92 @@
+:root {
+    --primary-color: #fb8122;
+    --dark-color: #1d2228;
+    --light-color: #e1e2e2;
+}
+
+.bill-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+}
+
+.bill-header {
+    border-bottom: 3px solid var(--primary-color);
+    padding-bottom: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.shop-info h2 {
+    color: var(--primary-color);
+    font-weight: 700;
+}
+
+.bill-details {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin: 2rem 0;
+}
+
+.items-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 2rem 0;
+}
+
+.items-table th {
+    background: var(--dark-color);
+    color: white;
+    padding: 0.5rem;
+    text-align: left;
+}
+
+.items-table td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--light-color);
+}
+
+.total-section {
+    background: var(--dark-color);
+    color: white;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-top: 2rem;
+}
+
+.description-box {
+    background: #fff7f0;
+    border-left: 4px solid var(--primary-color);
+    padding: 1.5rem;
+    margin: 2rem 0;
+    border-radius: 5px;
+}
+
+.print-btn {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.75rem 2rem;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.print-btn:hover {
+    background: #e6741e;
+    transform: translateY(-2px);
+}
+
+@media print {
+    .print-btn {
+        display: none;
+    }
+    .bg-header {
+        display: none;
+    }
+    .bg-footer {
+        display: none;
+    }
+}

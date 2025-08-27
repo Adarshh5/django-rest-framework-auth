@@ -1,0 +1,59 @@
+{% extends 'billing/base.html' %}
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'billing/css/EditShopDetails.css' %}">
+{% endblock %}
+
+{% block main-content %}
+<div class="edit-shop-container">
+    <h2 class="mb-4" style="color: var(--dark-color);">Edit Shop Details</h2>
+    
+
+    <form method="post" class="shop-form" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <div class="row g-4">
+            <!-- Left Column -->
+            <div class="col-md-6">
+                <div class="form-group mb-4">
+                    <label class="form-label">Shop Name</label>
+                    {{ form.name }}
+                </div>
+
+                <div class="form-group mb-4">
+                    <label class="form-label">Owner Name</label>
+                    {{ form.owner }}
+                </div>
+
+                <div class="form-group mb-4">
+                    <label class="form-label">Business Sector</label>
+                    {{ form.sector }}
+                </div>
+            </div>
+
+            <!-- Right Column -->
+            <div class="col-md-6">
+                <div class="form-group mb-4">
+                    <label class="form-label">Contact Number</label>
+                    {{ form.contact_number }}
+                </div>
+
+                <div class="form-group mb-4">
+                    <label class="form-label">Shop Address</label>
+                    {{ form.address }}
+                </div>
+
+                <div class="form-group mb-4">
+                    <label class="form-label">Description</label>
+                    {{ form.description }}
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-between mt-4">
+            <a href="{% url 'Profile' %}" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn btn-update">Update Details</button>
+        </div>
+    </form>
+</div>
+{% endblock main-content %}

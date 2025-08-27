@@ -1,0 +1,86 @@
+{% extends 'billing/base.html' %}
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'billing/css/GetBill.css' %}">
+{% endblock %}
+
+{% block main-content %}
+<div class="bill-container">
+    <!-- Shop Information -->
+    <div id="contentToCopy">
+    <div class="bill-header">
+        <div class="shop-info text-center mb-4">
+            <h2>{{ shop.name }}</h2>
+            <p class="mb-1 text-muted">Owner: {{ shop.owner }}</p>
+            <p class="mb-0 text-muted">Contact: {{ shop.contact_number }}</p>
+            <p class="text-muted">{{ shop.address }}</p>
+        </div>
+    </div>
+
+    <!-- Customer & Bill Info -->
+    <div class="bill-details">
+        <div class="row">
+            <div class="col-md-6">
+                <h5 class="text-primary">Customer Details</h5>
+                <p class="mb-1"><strong>Name:</strong> {{ bill.customer_name }}</p>
+                <p class="mb-0"><strong>Contact:</strong> {{ bill.customer_number }}</p>
+            </div>
+            <div class="col-md-6 text-end">
+                <h5 class="text-primary">Bill Information</h5>
+                <p class="mb-1"><strong>Date:</strong> {{ bill.created_at|date:"d M Y" }}</p>
+                <p class="mb-0"><strong>Bill ID:</strong> {{ bill.id }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Items Table -->
+    <table class="items-table">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Unit Price</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in Billitems %}
+            <tr>
+                <td>{{ item.product_name }}</td>
+                <td>{{ item.quantity }} {{ item.unit }}</td>
+                <td>₹{{ item.price }}</td>
+                <td>₹{{ item.total_price }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Total Section -->
+    <div class="total-section">
+        <div class="d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Total Amount</h5>
+            <h3 class="mb-0">₹{{ bill.total_amount }}</h3>
+        </div>
+    </div>
+
+    <!-- Description Section -->
+    {% if bill.description %}
+    <div class="description-box">
+        <h5 class="text-primary mb-3">Special Instructions</h5>
+        <p class="mb-0">{{ bill.description }}</p>
+    </div>
+    {% else %}
+    <div class="description-box">
+        <p class="text-muted mb-0">{{shop.description}}</p>
+    </div>
+    {% endif %}
+</div>
+
+    <!-- Print Button -->
+    <div class="text-center mt-4">
+        <button onclick="window.print()" class="print-btn">
+            Print Bill
+        </button>
+    </div>
+</div>
+{% endblock main-content %}

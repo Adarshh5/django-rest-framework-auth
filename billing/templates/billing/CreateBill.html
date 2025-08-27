@@ -1,0 +1,164 @@
+{% extends 'billing/base.html' %}
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'billing/css/CreateBill.css' %}">
+{% endblock %}
+
+{% block main-content %}
+
+
+    <!-- Flow Steps -->
+    <div class="flow-steps">
+        <div class="step {% if not billid %}active{% endif %}">1. Customer Details</div>
+        <div class="step {% if billid %}active{% endif %}">2. Add Items</div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Left Column - Forms -->
+        <div class="col-lg-6">
+            <div class="form-section">
+                {% if form1 %}
+                <h4 class="mb-4">Customer Information</h4>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="row g-3">
+                        {% for field in form1 %}
+                        <div class="col-md-6">
+                            <label class="form-label">{{field.label}}</label>
+                            {{field}}
+                            {% if field.errors %}
+                            <div class="text-danger small mt-1">
+                                {{field.errors|first}}
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div class="d-grid gap-2 mt-4">
+                        <button type="submit" class="btn btn-accent">Start Bill</button>
+                    </div>
+                </form>
+                {% endif %}
+                {% if form2 %}
+                <div class="customer-summary mt-4">
+                    <h4 class="mb-3">Current Bill</h4>
+                    <div class="customer-details mb-4">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="detail-item">
+                                    <span class="text-muted">Customer Name:</span>
+                                    <strong>{{ bill.customer_name }}</strong>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="detail-item">
+                                    <span class="text-muted">Contact Number:</span>
+                                    <strong>{{ bill.customer_number }}</strong>
+                                </div>
+                            </div>
+                            {% if bill.description %}
+                            <div class="col-12">
+                                <div class="detail-item">
+                                    <span class="text-muted">Additional Notes:</span>
+                                    <p class="mb-0">{{ bill.description }}</p>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="total-display">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="h5 mb-0">Total Amount:</span>
+                            <span class="h4 mb-0">₹{{ bill.total_amount }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <h4 class="mt-5 mb-3">Add New Item</h4>
+                <form method="post" action="{% url 'AddItems' %}">
+                    {% csrf_token %}
+                    <div class="row g-3">
+                        {% for field in form2 %}
+                        <div class="col-md-6">
+                            <label class="form-label">{{field.label}}</label>
+                            {{field}}
+                            {% if field.errors %}
+                            <div class="text-danger small mt-1">
+                                {{field.errors|first}}
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div class="d-grid gap-2 mt-4">
+                        <button type="submit" class="btn btn-accent">Add to Bill</button>
+                    </div>
+                </form>
+
+                <div class="mt-4">
+                    <form method="post" action="{% url 'billinfo' %}">
+                        {% csrf_token %}
+                        <label class="form-label">Additional Notes</label>
+                        <textarea name="billinfo" class="form-control" rows="3"
+                            placeholder="Special instructions, warranty info..."></textarea>
+                        <div class="d-grid gap-2 mt-3">
+                            <button type="submit" class="btn btn-accent">Save Notes</button>
+                        </div>
+                    </form>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Right Column - Items List -->
+        <div class="col-lg-6">
+            <div class="items-section">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4>Items List</h4>
+                    <div>
+                        <a href="{% url 'NewBill' %}" class="btn btn-sm btn-outline-primary me-2">New Bill</a>
+                        <a href="{% url 'ComplateDelete' %}" class="btn btn-sm btn-outline-danger">Clear All</a>
+                    </div>
+                </div>
+
+                {% if items %}
+                    {% for item in items %}
+                    <div class="item-card">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <strong>{{item.product_name}}</strong>
+                                    <span>₹{{item.total_price}}</span>
+                                </div>
+                                <div class="text-muted small">
+                                    {{item.quantity}} {{item.unit}} × ₹{{item.price}}
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <form method="post" action="{% url 'DeleteItem' %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="itemid" value="{{ item.id }}">
+                                    <button type="submit" class="delete-btn">
+                                        <i class="bi bi-trash">delete</i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="text-center py-4">
+                        <div class="text-muted">No items added yet</div>
+                    </div>
+                {% endif %}
+            </div>
+
+            {% if items %}
+            <div class="d-grid gap-2 mt-4">
+                <a href="{% url 'GetBill' %}" class="btn btn-accent btn-lg">Generate Final Bill</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
