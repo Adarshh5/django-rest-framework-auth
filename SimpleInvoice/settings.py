@@ -206,3 +206,8 @@ SIMPLE_JWT = {
     "AUTH_HEADER_TYPES": ("Bearer",),
     "ALGORITHM": "HS256",
 }
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://django-rest-887418779704.asia-south1.run.app",
+   
+]
