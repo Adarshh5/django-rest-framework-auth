@@ -40,7 +40,11 @@ Dockerized + CI/CD pipeline for automated deployments
 
 Backend: Django, Django REST Framework, Python
 
+<<<<<<< HEAD
 Database:  PostgreSQL on GCP (auth service)
+=======
+Database: MySQL (core app) + PostgreSQL on GCP (auth service)
+>>>>>>> 4e7d5de8e39024f28f967ff28d94f4e272029a63
 
 Frontend: HTML, CSS, Bootstrap, JavaScript
 
@@ -52,6 +56,7 @@ Deployment: Docker + CI/CD + Google Cloud Run
 
 ✅ BillMaker is stable and functional for billing tasks.
 ✅ REST Authentication module is integrated and deployed.
+<<<<<<< HEAD
 🛠️ Future work: multi-shop management, performance optimizations.
 
 📺 Demo
@@ -67,3 +72,12 @@ Deployment: Docker + CI/CD + Google Cloud Run
 This project is for learning and practice purposes.
 
 ⚡ BillMaker now combines practical billing management with secure, production-grade REST APIs.
+=======
+
+
+
+🎥 Link: https://django-rest-887418779704.asia-south1.run.app
+
+
+⚡ BillMaker now combines practical billing management with secure, production-grade REST APIs.
+>>>>>>> 4e7d5de8e39024f28f967ff28d94f4e272029a63
