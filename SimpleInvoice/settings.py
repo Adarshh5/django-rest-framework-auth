@@ -80,30 +80,44 @@ WSGI_APPLICATION = 'SimpleInvoice.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 
+tmpPostgres = urlparse(os.getenv("DATABASE_URL"))
 
-if os.getenv("GAE_ENV", "").startswith("standard") or os.getenv("K_SERVICE"):
-    # Cloud Run / GCP
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql",
-            "NAME": os.getenv("DB_NAME"),
-            "USER": os.getenv("DB_USER"),
-            "PASSWORD": os.getenv("DB_PASS"),
-            "HOST": f"/cloudsql/{os.getenv('INSTANCE_CONNECTION_NAME')}",
-        }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': tmpPostgres.path.replace('/', ''),
+        'USER': tmpPostgres.username,
+        'PASSWORD': tmpPostgres.password,
+        'HOST': tmpPostgres.hostname,
+        'PORT': 5432,
+        'OPTIONS': dict(parse_qsl(tmpPostgres.query)),
     }
-else:
-    # Local dev (public IP)
-    DATABASES = {
-        "default": {
-        "ENGINE": "django.db.backends.postgresql",  # Use PostgreSQL
-        "NAME": os.getenv("dbname"),  # Database name
-        "USER": os.getenv("user"),  # Database username
-        "PASSWORD": os.getenv("password"),  # Database password
-        "HOST": os.getenv("host"),  # Database host (e.g., 'db.example.com')
-        "PORT": os.getenv("port"),  # Database port (default is 5432)
-        }
-    }
+}
+
+
+# if os.getenv("GAE_ENV", "").startswith("standard") or os.getenv("K_SERVICE"):
+#     # Cloud Run / GCP
+#     DATABASES = {
+#         "default": {
+#             "ENGINE": "django.db.backends.postgresql",
+#             "NAME": os.getenv("DB_NAME"),
+#             "USER": os.getenv("DB_USER"),
+#             "PASSWORD": os.getenv("DB_PASS"),
+#             "HOST": f"/cloudsql/{os.getenv('INSTANCE_CONNECTION_NAME')}",
+#         }
+#     }
+# else:
+#     # Local dev (public IP)
+#     DATABASES = {
+#         "default": {
+#         "ENGINE": "django.db.backends.postgresql",  # Use PostgreSQL
+#         "NAME": os.getenv("dbname"),  # Database name
+#         "USER": os.getenv("user"),  # Database username
+#         "PASSWORD": os.getenv("password"),  # Database password
+#         "HOST": os.getenv("host"),  # Database host (e.g., 'db.example.com')
+#         "PORT": os.getenv("port"),  # Database port (default is 5432)
+#         }
+#     }
 
 
 # Password validation
