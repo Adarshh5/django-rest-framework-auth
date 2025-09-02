@@ -18,7 +18,7 @@ load_dotenv(dotenv_path=env_path)
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -81,30 +81,50 @@ WSGI_APPLICATION = 'SimpleInvoice.wsgi.application'
 
 
 
-if os.getenv("GAE_ENV", "").startswith("standard") or os.getenv("K_SERVICE"):
-    # Cloud Run / GCP
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql",
-            "NAME": os.getenv("DB_NAME"),
-            "USER": os.getenv("DB_USER"),
-            "PASSWORD": os.getenv("DB_PASS"),
-            "HOST": f"/cloudsql/{os.getenv('INSTANCE_CONNECTION_NAME')}",
-        }
-    }
-else:
-    # Local dev (public IP)
-    DATABASES = {
-        "default": {
-        "ENGINE": "django.db.backends.postgresql",  # Use PostgreSQL
-        "NAME": os.getenv("dbname"),  # Database name
-        "USER": os.getenv("user"),  # Database username
-        "PASSWORD": os.getenv("password"),  # Database password
-        "HOST": os.getenv("host"),  # Database host (e.g., 'db.example.com')
-        "PORT": os.getenv("port"),  # Database port (default is 5432)
-        }
-    }
+# if os.getenv("GAE_ENV", "").startswith("standard") or os.getenv("K_SERVICE"):
+#     # Cloud Run / GCP
+#     DATABASES = {
+#         "default": {
+#             "ENGINE": "django.db.backends.postgresql",
+#             "NAME": os.getenv("DB_NAME"),
+#             "USER": os.getenv("DB_USER"),
+#             "PASSWORD": os.getenv("DB_PASS"),
+#             "HOST": f"/cloudsql/{os.getenv('INSTANCE_CONNECTION_NAME')}",
+#         }
+#     }
+# else:
+#     # Local dev (public IP)
+#     DATABASES = {
+#         "default": {
+#         "ENGINE": "django.db.backends.postgresql",  # Use PostgreSQL
+#         "NAME": os.getenv("dbname"),  # Database name
+#         "USER": os.getenv("user"),  # Database username
+#         "PASSWORD": os.getenv("password"),  # Database password
+#         "HOST": os.getenv("host"),  # Database host (e.g., 'db.example.com')
+#         "PORT": os.getenv("port"),  # Database port (default is 5432)
+#         }
+#     }
 
+# Add these at the top of your settings.py
+
+
+from urllib.parse import urlparse, parse_qsl
+
+
+# Replace the DATABASES section of your settings.py with this
+tmpPostgres = urlparse(os.getenv("DATABASE_URL"))
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': tmpPostgres.path.replace('/', ''),
+        'USER': tmpPostgres.username,
+        'PASSWORD': tmpPostgres.password,
+        'HOST': tmpPostgres.hostname,
+        'PORT': 5432,
+        'OPTIONS': dict(parse_qsl(tmpPostgres.query)),
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
