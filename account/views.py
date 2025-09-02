@@ -190,3 +190,8 @@ def password_reset_confirm_view(request, uidb64, token):
      except (TypeError, ValueError, OverflowError, User.DoesNotExist):
         messages.error(request, "An error occurred. Please try again later. ")
         return redirect('password_reset')
+     
+
+
+def endpoint(request):
+    return render(request, "account/endpointinfo.html")

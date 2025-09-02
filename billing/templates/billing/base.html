@@ -29,10 +29,12 @@
                     {% csrf_token %}
                     <button type="submit" class="btn btn-accent me-2">Logout</button>
                    </form>
+                   
 
                     <a href="{% url 'Profile' %}" class="btn btn-accent">{{request.user.first_name}}</a>
                 </div>
                 {% endif %}
+                <a href="{% url 'endpoint' %}"  class="btn btn-accent me-2">Endpoint</a>
             </div>
         </div>
     </header>

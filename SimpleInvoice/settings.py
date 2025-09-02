@@ -139,6 +139,7 @@ DATABASES = {
         'HOST': tmpPostgres.hostname,
         'PORT': 5432,
         'OPTIONS': dict(parse_qsl(tmpPostgres.query)),
+        
     }
 }
 
@@ -228,6 +229,7 @@ AUTH_USER_MODEL = 'account.User'
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
+        "path.to.BlacklistJWTAuthentication",
     ),
 }
 
@@ -235,7 +237,7 @@ REST_FRAMEWORK = {
 from datetime import timedelta
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),  # short-lived access token
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),  # short-lived access token
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
     "ROTATE_REFRESH_TOKENS": True,
     "BLACKLIST_AFTER_ROTATION": True,
@@ -247,3 +249,19 @@ CSRF_TRUSTED_ORIGINS = [
     "https://django-rest-887418779704.asia-south1.run.app",
    
 ]
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": os.getenv("REDIS_URL"),
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
+# settings.py
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "user.authentication.BlacklistJWTAuthentication",
+    ]
+}

@@ -1,0 +1,531 @@
+{% extends 'billing/base.html' %}
+{% load static %}
+
+{% block main-content %}
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="mb-0">JWT Authentication API Documentation</h2>
+                    <p class="mb-0 mt-2">Complete guide to authentication endpoints</p>
+                </div>
+                <div class="card-body">
+                    <!-- Base URL Info -->
+                    <div class="alert alert-info">
+                        <strong>Base URL:</strong> <code>{{request.scheme}}://{{request.get_host}}/api/users/</code>
+                    </div>
+
+                    <!-- Table of Contents -->
+                    <div class="mb-4">
+                        <h4>Quick Navigation</h4>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <ul class="list-unstyled">
+                                    <li><a href="#register" class="text-decoration-none">📝 User Registration</a></li>
+                                    <li><a href="#activate" class="text-decoration-none">✅ Account Activation</a></li>
+                                    <li><a href="#login" class="text-decoration-none">🔐 User Login</a></li>
+                                    <li><a href="#token-refresh" class="text-decoration-none">🔄 Token Refresh</a></li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <ul class="list-unstyled">
+                                    <li><a href="#token-verify" class="text-decoration-none">🔍 Token Verify</a></li>
+                                    <li><a href="#password-reset" class="text-decoration-none">🔑 Password Reset</a></li>
+                                    <li><a href="#me" class="text-decoration-none">👤 User Profile</a></li>
+                                    <li><a href="#logout" class="text-decoration-none">🚪 Logout</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Endpoints Documentation -->
+                    
+                    <!-- Register Endpoint -->
+                    <div id="register" class="endpoint-section mb-5">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="badge bg-success me-2">POST</span>
+                            <h4 class="mb-0">User Registration</h4>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card border-light">
+                                    <div class="card-header bg-light">
+                                        <strong>Endpoint</strong>
+                                    </div>
+                                    <div class="card-body">
+                                        <code>/register/</code>
+                                    </div>
+                                </div>
+                                
+                                <div class="card border-light mt-3">
+                                    <div class="card-header bg-light">
+                                        <strong>Headers</strong>
+                                    </div>
+                                    <div class="card-body">
+                                        <code>Content-Type: application/json</code>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card border-light">
+                                    <div class="card-header bg-light">
+                                        <strong>Request Body</strong>
+                                    </div>
+                                    <div class="card-body">
+                                        <pre><code>{
+  "email": "user@example.com",
+  "password": "your_password",
+  "confirm_password": "your_password",
+  "first_name": "John",
+  "last_name": "Doe"
+}</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <h6>Response (201 Created):</h6>
+                            <pre class="bg-light p-3"><code>{"detail": "Registration successful! Check your email to activate your account."}</code></pre>
+                        </div>
+                    </div>
+
+                    <!-- Activate Endpoint -->
+                    <div id="activate" class="endpoint-section mb-5">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="badge bg-info me-2">GET</span>
+                            <h4 class="mb-0">Account Activation</h4>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="card border-light">
+                                    <div class="card-header bg-light">
+                                        <strong>Endpoint</strong>
+                                    </div>
+                                    <div class="card-body">
+                                        <code>/activate/&lt;str:uidb64&gt;/&lt;str:token&gt;/</code>
+                                        <p class="text-muted mt-2">Usually accessed via email link. No request body required.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <h6>Response (200 OK):</h6>
+                            <pre class="bg-light p-3"><code>{"detail": "Your account has been activated successfully!"}</code></pre>
+                        </div>
+                    </div>
+
+                    <!-- Login Endpoint -->
+                    <div id="login" class="endpoint-section mb-5">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="badge bg-success me-2">POST</span>
+                            <h4 class="mb-0">User Login</h4>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card border-light">
+                                    <div class="card-header bg-light">
+                                        <strong>Endpoint</strong>
+                                    </div>
+                                    <div class="card-body">
+                                        <code>/login/</code>
+                                    </div>
+                                </div>
+                                
+                                <div class="card border-light mt-3">
+                                    <div class="card-header bg-light">
+                                        <strong>Request Body</strong>
+                                    </div>
+                                    <div class="card-body">
+                                        <pre><code>{
+  "email": "user@example.com",
+  "password": "your_password"
+}</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card border-light">
+                                    <div class="card-header bg-light">
+                                        <strong>Response (200 OK)</strong>
+                                    </div>
+                                    <div class="card-body">
+                                        <pre><code>{
+  "refresh": "eyJ0eXAiOiJKV1Q...",
+  "access": "eyJ0eXAiOiJKV1Q...",
+  "user": {
+    "id": 1,
+    "email": "user@example.com",
+    "first_name": "John",
+    "last_name": "Doe"
+  }
+}</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Token Refresh Endpoint -->
+                    <div id="token-refresh" class="endpoint-section mb-5">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="badge bg-warning me-2">POST</span>
+                            <h4 class="mb-0">Token Refresh</h4>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card border-light">
+                                    <div class="card-header bg-light">
+                                        <strong>Endpoint</strong>
+                                    </div>
+                                    <div class="card-body">
+                                        <code>/token/refresh/</code>
+                                    </div>
+                                </div>
+                                
+                                <div class="card border-light mt-3">
+                                    <div class="card-header bg-light">
+                                        <strong>Request Body</strong>
+                                    </div>
+                                    <div class="card-body">
+                                        <pre><code>{
+  "refresh": "eyJ0eXAiOiJKV1Q..."
+}</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card border-light">
+                                    <div class="card-header bg-light">
+                                        <strong>Response (200 OK)</strong>
+                                    </div>
+                                    <div class="card-body">
+                                        <pre><code>{
+  "access": "eyJ0eXAiOiJKV1Q..."
+}</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Token Verify Endpoint -->
+                    <div id="token-verify" class="endpoint-section mb-5">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="badge bg-warning me-2">POST</span>
+                            <h4 class="mb-0">Token Verify</h4>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card border-light">
+                                    <div class="card-header bg-light">
+                                        <strong>Endpoint</strong>
+                                    </div>
+                                    <div class="card-body">
+                                        <code>/token/verify/</code>
+                                    </div>
+                                </div>
+                                
+                                <div class="card border-light mt-3">
+                                    <div class="card-header bg-light">
+                                        <strong>Request Body</strong>
+                                    </div>
+                                    <div class="card-body">
+                                        <pre><code>{
+  "token": "eyJ0eXAiOiJKV1Q..."
+}</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card border-light">
+                                    <div class="card-header bg-light">
+                                        <strong>Response (200 OK)</strong>
+                                    </div>
+                                    <div class="card-body">
+                                        <code>{}</code> <small class="text-muted">(Empty response means token is valid)</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Password Reset Request -->
+                    <div id="password-reset" class="endpoint-section mb-5">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="badge bg-success me-2">POST</span>
+                            <h4 class="mb-0">Password Reset Request</h4>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card border-light">
+                                    <div class="card-header bg-light">
+                                        <strong>Endpoint</strong>
+                                    </div>
+                                    <div class="card-body">
+                                        <code>/password-reset/</code>
+                                    </div>
+                                </div>
+                                
+                                <div class="card border-light mt-3">
+                                    <div class="card-header bg-light">
+                                        <strong>Request Body</strong>
+                                    </div>
+                                    <div class="card-body">
+                                        <pre><code>{
+  "email": "user@example.com"
+}</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card border-light">
+                                    <div class="card-header bg-light">
+                                        <strong>Response (200 OK)</strong>
+                                    </div>
+                                    <div class="card-body">
+                                        <pre><code>{
+  "detail": "We have sent you a password reset link. Please check your email."
+}</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Password Reset Confirm -->
+                        <div class="mt-4">
+                            <h5>Password Reset Confirm</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="card border-light">
+                                        <div class="card-header bg-light">
+                                            <strong>Endpoint</strong>
+                                        </div>
+                                        <div class="card-body">
+                                            <code>/password-reset-confirm/&lt;str:uidb64&gt;/&lt;str:token&gt;/</code>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="card border-light mt-3">
+                                        <div class="card-header bg-light">
+                                            <strong>Request Body</strong>
+                                        </div>
+                                        <div class="card-body">
+                                            <pre><code>{
+  "new_password": "new_secure_password",
+  "confirm_password": "new_secure_password"
+}</code></pre>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card border-light">
+                                        <div class="card-header bg-light">
+                                            <strong>Response (200 OK)</strong>
+                                        </div>
+                                        <div class="card-body">
+                                            <pre><code>{
+  "detail": "Password has been reset successfully."
+}</code></pre>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Me Endpoint -->
+                    <div id="me" class="endpoint-section mb-5">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="badge bg-info me-2">GET</span>
+                            <h4 class="mb-0">User Profile</h4>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card border-light">
+                                    <div class="card-header bg-light">
+                                        <strong>Endpoint</strong>
+                                    </div>
+                                    <div class="card-body">
+                                        <code>/me/</code>
+                                    </div>
+                                </div>
+                                
+                                <div class="card border-light mt-3">
+                                    <div class="card-header bg-light">
+                                        <strong>Headers</strong>
+                                    </div>
+                                    <div class="card-body">
+                                        <code>Authorization: Bearer &lt;access_token&gt;</code>
+                                        <div class="alert alert-warning mt-2 p-2">
+                                            <small><strong>Note:</strong> This endpoint requires authentication</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card border-light">
+                                    <div class="card-header bg-light">
+                                        <strong>Response (200 OK)</strong>
+                                    </div>
+                                    <div class="card-body">
+                                        <pre><code>{
+  "id": 1,
+  "email": "user@example.com",
+  "first_name": "John",
+  "last_name": "Doe",
+  "is_active": true
+}</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Logout Endpoint -->
+                    <div id="logout" class="endpoint-section mb-5">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="badge bg-danger me-2">POST</span>
+                            <h4 class="mb-0">User Logout</h4>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card border-light">
+                                    <div class="card-header bg-light">
+                                        <strong>Endpoint</strong>
+                                    </div>
+                                    <div class="card-body">
+                                        <code>/logout/</code>
+                                    </div>
+                                </div>
+                                
+                                <div class="card border-light mt-3">
+                                    <div class="card-header bg-light">
+                                        <strong>Request Body</strong>
+                                    </div>
+                                    <div class="card-body">
+                                        <pre><code>{
+  "refresh": "eyJ0eXAiOiJKV1Q...",
+  "access": "eyJ0eXAiOiJKV1Q..."
+}</code></pre>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card border-light">
+                                    <div class="card-header bg-light">
+                                        <strong>Response (200 OK)</strong>
+                                    </div>
+                                    <div class="card-body">
+                                        <pre><code>{
+  "detail": "Successfully logged out."
+}</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Common Error Responses -->
+                    <div class="mt-5">
+                        <h4>Common Error Responses</h4>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card border-danger">
+                                    <div class="card-header bg-danger text-white">
+                                        <strong>400 Bad Request</strong>
+                                    </div>
+                                    <div class="card-body">
+                                        <pre><code>{
+  "email": ["This field is required."],
+  "password": ["This field is required."]
+}</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card border-warning">
+                                    <div class="card-header bg-warning">
+                                        <strong>401 Unauthorized</strong>
+                                    </div>
+                                    <div class="card-body">
+                                        <pre><code>{
+  "detail": "Authentication credentials were not provided."
+}</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Usage Notes -->
+                    <div class="mt-5">
+                        <div class="alert alert-primary">
+                            <h5>📋 Usage Notes</h5>
+                            <ul class="mb-0">
+                                <li>All endpoints accept JSON data in request body</li>
+                                <li>Access tokens expire after a short period (default: 20 minutes)</li>
+                                <li>Refresh tokens have longer expiry (default: 1 day)</li>
+                                <li>Include <code>Authorization: Bearer &lt;token&gt;</code> header for protected endpoints</li>
+                                <li>Email activation links are sent automatically after registration</li>
+                                <li>Password reset links are sent via email and expire after use</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.endpoint-section {
+    border-bottom: 2px solid #f8f9fa;
+    padding-bottom: 2rem;
+}
+
+.endpoint-section:last-of-type {
+    border-bottom: none;
+}
+
+pre {
+    font-size: 0.875rem;
+    margin-bottom: 0;
+}
+
+.badge {
+    font-size: 0.875rem;
+    padding: 0.5rem 0.75rem;
+}
+
+.card {
+    margin-bottom: 1rem;
+}
+
+code {
+    background-color: #f8f9fa;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.875rem;
+}
+
+.bg-light pre code {
+    background-color: transparent;
+    padding: 0;
+}
+
+@media (max-width: 768px) {
+    .container-fluid {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    
+    pre {
+        font-size: 0.75rem;
+        overflow-x: auto;
+    }
+}
+</style>
+
+{% endblock main-content %}

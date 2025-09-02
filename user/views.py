@@ -17,6 +17,10 @@ from .utils.email import send_activation_email
 from .serializers import PasswordResetRequestSerializer, PasswordResetConfirmSerializer, UserSerializer
 from .utils.email import send_reset_password_email
 from rest_framework.permissions import IsAuthenticated
+import datetime
+from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
+from django.core.cache import cache
+
 
 
 
@@ -125,3 +129,38 @@ class MeAPIView(APIView):
     def get(self, request):
         serializer = UserSerializer(request.user)
         return Response(serializer.data)
+    
+
+
+
+
+
+
+
+class LogoutAPIView(APIView):
+    def post(self, request):
+        refresh_token = request.data.get("refresh")
+        access_token = request.data.get("access")
+
+        if access_token:
+            try:
+                token = AccessToken(access_token)
+                exp = token['exp']
+                jti = token['jti']
+
+                # Store in Redis until token expires
+                ttl = exp - int(datetime.datetime.utcnow().timestamp())
+                cache.set(f"blacklist_{jti}", "true", timeout=ttl)
+            except Exception as e:
+                return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+        if refresh_token:
+            try:
+                RefreshToken(refresh_token).blacklist()
+            except Exception as e:
+                return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response({"detail": "Successfully logged out."}, status=status.HTTP_200_OK)
+
+
+
